@@ -5,7 +5,7 @@ import { useAxiosStore } from './axiosStore'
 
 export const useSessionStore = defineStore('session', {
   state: () => ({
-    _user: null as User | null,
+    user: null as User | null,
   }),
   actions: {
     /**
@@ -23,6 +23,10 @@ export const useSessionStore = defineStore('session', {
         return false
       }
       cookies.set('accessToken', res.data.access)
+
+      // ログインユーザー情報の更新
+      await this.getLoginUser()
+
       return true
     },
 
@@ -33,7 +37,7 @@ export const useSessionStore = defineStore('session', {
       const { cookies } = useCookies()
 
       cookies.remove('accessToken')
-      this.$state._user = null
+      this.$state.user = null
     },
 
     /**
@@ -45,11 +49,15 @@ export const useSessionStore = defineStore('session', {
 
       const url = '/api/auth/jwt/verify'
       const data = { token: cookies.get('accessToken') }
-      const res = axiosStore.post(url, data)
+      const res = await axiosStore.post(url, data)
       if (!res) {
         console.error('アクセストークンの検証に失敗しました')
         return false
       }
+
+      // ログインユーザー情報の更新
+      await this.getLoginUser()
+
       return true
     },
 
@@ -57,18 +65,17 @@ export const useSessionStore = defineStore('session', {
      * ログインユーザーの取得を行う
      */
     async getLoginUser() {
-      if (!this.$state._user) {
-        const axiosStore = useAxiosStore()
+      const axiosStore = useAxiosStore()
 
-        const url = '/api/auth/users/me'
-        const res = await axiosStore.get(url)
-        if (!res) {
-          console.error('ログインユーザーの取得に失敗しました')
-          return null
-        }
-        this.$state._user = res.data
+      const url = '/api/auth/users/me'
+      const res = await axiosStore.get(url)
+      if (!res) {
+        console.error('ログインユーザーの取得に失敗しました')
+        return null
       }
-      return this.$state._user
+
+      this.$state.user = res.data
+      return true
     },
   },
 })
