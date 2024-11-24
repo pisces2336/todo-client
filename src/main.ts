@@ -1,3 +1,5 @@
+import 'modern-css-reset'
+
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
