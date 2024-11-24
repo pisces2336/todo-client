@@ -5,27 +5,13 @@ import { useAxiosStore } from './axiosStore'
 
 export const useSessionStore = defineStore('session', {
   state: () => ({
-    user: null as User | null,
+    _user: null as User | null,
   }),
   actions: {
     /**
-     * アクセストークンの取得とログインユーザーの取得を行う
+     * ログインを行う
      */
     async login(username: string, password: string) {
-      return (await this._fetchAccessToken(username, password)) && (await this._fetchLoginUser())
-    },
-
-    /**
-     * アクセストークンの検証とログインユーザーの取得を行う
-     */
-    async isAuthenticated() {
-      return (await this._verifyAccessToken()) && (await this._fetchLoginUser())
-    },
-
-    /**
-     * アクセストークンを取得する
-     */
-    async _fetchAccessToken(username: string, password: string) {
       const axiosStore = useAxiosStore()
       const { cookies } = useCookies()
 
@@ -41,9 +27,19 @@ export const useSessionStore = defineStore('session', {
     },
 
     /**
-     * アクセストークンを検証する
+     * ログアウトを行う（アクセストークンとユーザー情報を捨てる）
      */
-    async _verifyAccessToken() {
+    logout() {
+      const { cookies } = useCookies()
+
+      cookies.remove('accessToken')
+      this.$state._user = null
+    },
+
+    /**
+     * アクセストークンの検証を行う
+     */
+    async isAuthenticated() {
       const axiosStore = useAxiosStore()
       const { cookies } = useCookies()
 
@@ -58,19 +54,21 @@ export const useSessionStore = defineStore('session', {
     },
 
     /**
-     * ログインユーザーを取得する
+     * ログインユーザーの取得を行う
      */
-    async _fetchLoginUser() {
-      const axiosStore = useAxiosStore()
+    async getLoginUser() {
+      if (!this.$state._user) {
+        const axiosStore = useAxiosStore()
 
-      const url = '/api/auth/users/me'
-      const res = await axiosStore.get(url)
-      if (!res) {
-        console.error('ログインユーザーの取得に失敗しました')
-        return false
+        const url = '/api/auth/users/me'
+        const res = await axiosStore.get(url)
+        if (!res) {
+          console.error('ログインユーザーの取得に失敗しました')
+          return null
+        }
+        this.$state._user = res.data
       }
-      this.$state.user = res.data
-      return true
+      return this.$state._user
     },
   },
 })
