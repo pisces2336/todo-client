@@ -19,7 +19,7 @@ const router = useRouter()
 
 onMounted(async () => {
   if (await sessionStore.isAuthenticated()) {
-    router.push('/')
+    router.push('/mypage')
   }
 })
 </script>
