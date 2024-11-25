@@ -1,39 +1,17 @@
-# .
+# todo-client
 
-This template should help get you started developing with Vue 3 in Vite.
+- [serverリポジトリ](https://github.com/pisces2336/todo-server)
 
-## Recommended IDE Setup
+## 概要
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- vue3 (vuetify) で作成したtodoアプリのクライアントサイドリポジトリです。
 
-## Type Support for `.vue` Imports in TS
+## 大変だったところ
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- cookieを用いた認証維持を中心としたapiリクエストの整理
 
-## Customize configuration
+## こだわったところ
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- viewがfatにならないようコンポーネントへの切り出しを心がけた
+- 認証情報をcookieに入れることで有効期間内はログイン状態を継続できるようにした
+- セッション管理やapiリクエストを積極的にラップし、宣言的に活用できるようにした
