@@ -6,6 +6,8 @@
 
 - vue3 (vuetify) で作成したtodoアプリのクライアントサイドリポジトリです。
 
+https://github.com/user-attachments/assets/408b2ff3-b07b-4dda-a4d8-f76cdae6fb28
+
 ## 大変だったところ
 
 - cookieを用いた認証維持を中心としたapiリクエストの整理
