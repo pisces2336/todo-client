@@ -28,5 +28,17 @@ export const useAxiosStore = defineStore('axios', {
         return null
       }
     },
+    async delete(url: string) {
+      const { cookies } = useCookies()
+
+      const accessToken = cookies.get('accessToken')
+      const config = { headers: { Authorization: `JWT ${accessToken}` } }
+      try {
+        const res = await axios.delete(url, config)
+        return res
+      } catch {
+        return null
+      }
+    },
   },
 })
