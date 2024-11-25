@@ -58,7 +58,7 @@ const submit = async () => {
 
   const loginResult = await sessionStore.login(username.value, password.value)
   if (loginResult) {
-    router.push('/')
+    router.push('/mypage')
   }
 }
 </script>
